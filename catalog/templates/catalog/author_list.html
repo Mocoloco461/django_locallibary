@@ -1,0 +1,57 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Catalog · Authors{% endblock %}
+
+{% block content %}
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+    <div>
+      <h2 class="fw-bold mb-1">יוצרי הספרייה</h2>
+      <p class="text-secondary mb-0">
+        דפדפו ברשימת המחברים, גלו את תאריכי החיים וגשו לרשימת הספרים שלהם בלחיצת כפתור.
+      </p>
+    </div>
+    {% if author_list %}
+      <span class="badge rounded-pill text-bg-secondary-subtle border border-secondary">
+        <i class="bi bi-people-fill me-1"></i>
+        {{ author_list|length }} מחבר{% if author_list|length != 1 %}ים{% endif %}
+      </span>
+    {% endif %}
+  </div>
+
+  {% if author_list %}
+    <ul class="entity-list list-unstyled mb-0">
+      {% for author in author_list %}
+        <li class="entity-card">
+          <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+            <div>
+              <a class="h5 fw-semibold d-block mb-1" href="{{ author.get_absolute_url }}">
+                {{ author.first_name }} {{ author.last_name }}
+              </a>
+              <div class="entity-meta">
+                <span>
+                  <i class="bi bi-calendar-heart me-1"></i>
+                  {{ author.date_of_birth|default:"תאריך לידה לא ידוע" }}
+                  {% if author.date_of_death %}
+                    – {{ author.date_of_death }}
+                  {% endif %}
+                </span>
+                <span>
+                  <i class="bi bi-journal-bookmark me-1"></i>
+                  {{ author.book_set.count }} ספר{% if author.book_set.count != 1 %}ים{% endif %}
+                </span>
+              </div>
+            </div>
+            <a class="btn btn-outline-primary btn-sm rounded-pill" href="{{ author.get_absolute_url }}">
+              לצפייה ביצירות <i class="bi bi-arrow-up-right ms-1"></i>
+            </a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="empty-state">
+      <i class="bi bi-journal-x me-2"></i>
+      עוד לא רשומים מחברים במערכת. הוסיפו את היוצר הראשון שלכם.
+    </div>
+  {% endif %}
+{% endblock %}

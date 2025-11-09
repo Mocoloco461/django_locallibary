@@ -1,0 +1,116 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Dashboard · My Local Library{% endblock %}
+
+{% block content %}
+  <section class="intro-card">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <div>
+        <h2 class="display-6 fw-bold mb-2">
+          {% if username %}
+            שלום, <span class="text-primary">{{ username }}</span>!
+          {% else %}
+            שלום וחזרה לספרייה המקומית!
+          {% endif %}
+        </h2>
+        <p class="lead text-secondary mb-0">
+          בוא נגלה את הספר הבא שלך, נעקוב אחרי השאלות ונחזור לעלילות שכבר אהבת.
+        </p>
+      </div>
+      <div class="text-end">
+        <span class="badge rounded-pill text-bg-primary px-4 py-2">
+          <i class="bi bi-lightning-charge-fill me-1"></i>
+          ביקרת {{ num_visits }} פ{{ num_visits|pluralize:"עם,עמים" }}
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <h3>ספרים</h3>
+      <div class="stat-value">{{ num_books }}</div>
+      <small>כמות הספרים בספרייה</small>
+    </div>
+    <div class="stat-card">
+      <h3>עותקים</h3>
+      <div class="stat-value">{{ num_instances }}</div>
+      <small>סה״כ עותקים זמינים ומושאלים</small>
+    </div>
+    <div class="stat-card">
+      <h3>זמינים עכשיו</h3>
+      <div class="stat-value text-success">{{ num_instances_available }}</div>
+      <small>מחכים על המדף</small>
+    </div>
+    <div class="stat-card">
+      <h3>מחברים</h3>
+      <div class="stat-value">{{ num_authors }}</div>
+      <small>יוצרים שכדאי להכיר</small>
+    </div>
+    <div class="stat-card">
+      <h3>ז׳אנרים</h3>
+      <div class="stat-value">{{ num_genre }}</div>
+      <small>סגנונות לסמן בסימנייה</small>
+    </div>
+  </div>
+
+  <section class="search-area">
+    <h3 class="h5 fw-semibold text-primary mb-2">
+      <i class="bi bi-search-heart me-1"></i>
+      מחפשים ספר מסוים?
+    </h3>
+    <p class="text-secondary mb-0">
+      הקלידו שם או מילות מפתח וקבלו תוצאות מיידיות מאוסף הספרייה.
+    </p>
+    <form method="post" class="row gy-3 gx-2 align-items-end">
+      {% csrf_token %}
+      <div class="col-md-8">
+        <label class="form-label" for="book_name">שם הספר</label>
+        <input type="text"
+          name="book_name"
+          id="book_name"
+          class="form-control"
+          placeholder="לדוגמה: Harry Potter"
+          required>
+      </div>
+      <div class="col-md-4 text-md-end">
+        <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+          <i class="bi bi-magic me-2"></i>מצא/י את הספר
+        </button>
+      </div>
+    </form>
+  </section>
+
+  {% if search_results %}
+    <section class="search-results">
+      <h4 class="fw-bold mb-3">תוצאות חיפוש</h4>
+      {% if search_results|length > 0 %}
+        <ul class="entity-list list-unstyled mb-0">
+          {% for book in search_results %}
+            <li class="entity-card">
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-2">
+                <div>
+                  <a class="h5 d-block mb-1" href="{{ book.get_absolute_url }}">{{ book.title }}</a>
+                  <div class="entity-meta">
+                    <span><i class="bi bi-person-lines-fill me-1"></i>{{ book.author }}</span>
+                    <span><i class="bi bi-upc-scan me-1"></i>{{ book.isbn }}</span>
+                  </div>
+                </div>
+                {% if book.display_genre %}
+                  <span class="badge rounded-pill text-bg-light border">
+                    <i class="bi bi-bookmarks me-1"></i>{{ book.display_genre }}
+                  </span>
+                {% endif %}
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="empty-state mb-0">
+          <i class="bi bi-emoji-neutral me-2"></i>
+          לא נמצאו ספרים שמתאימים לחיפוש. נסו שם אחר או מילה בולטת מהספר.
+        </p>
+      {% endif %}
+    </section>
+  {% endif %}
+{% endblock %}

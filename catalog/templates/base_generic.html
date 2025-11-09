@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    {% block title %}
+      <title>Local Library</title>
+    {% endblock %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Add additional CSS in static file -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-2 bg-light border-end vh-100 p-3 shadow-sm">
+          {% block sidebar %}
+            <ul class="nav flex-column sidebar-nav">
+              {% if user.is_authenticated %}
+                <li class="nav-item mb-2 text-muted small">
+                  <i class="bi bi-person-circle"></i> {{ user.get_username }}
+                </li>
+                <li class="nav-item mb-2">
+                  <a class="nav-link link-dark" href="{% url 'my-borrowed' %}">
+                    <i class="bi bi-bookmark"></i> My Borrowed
+                  </a>
+                </li>
+                <li class="nav-item mb-2">
+                  <a class="nav-link link-dark" href="{% url 'all-borrowed' %}">
+                    <i class="bi bi-collection"></i> All Borrowed
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <form id="logout-form" method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger w-100 mt-2">
+                      <i class="bi bi-box-arrow-right"></i> Logout
+                    </button>
+                  </form>
+                </li>
+              {% else %}
+                <li class="nav-item mb-2">
+                  <a class="nav-link link-primary" href="{% url 'login' %}?next={{ request.path }}">
+                    <i class="bi bi-box-arrow-in-right"></i> Login
+                  </a>
+                </li>
+              {% endif %}
+              <hr />
+              <li class="nav-item mb-2">
+                <a class="nav-link link-dark" href="{% url 'index' %}">
+                  <i class="bi bi-house"></i> Home
+                </a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link link-dark" href="{% url 'authors' %}">
+                  <i class="bi bi-people"></i> All Authors
+                </a>
+                <hr class="my-3" />
+                <div class="sidebar-section">
+                  <p class="text-uppercase text-muted small fw-semibold mb-2">Staff</p>
+                  <div class="d-grid gap-2">
+                    <a class="btn btn-outline-primary btn-sm text-start d-flex align-items-center justify-content-between"
+                      href="{% url 'all-borrowed' %}">
+                      <span><i class="bi bi-collection me-2"></i>All Borrowed</span>
+                      <i class="bi bi-chevron-right small"></i>
+                    </a>
+                    {% for group in user.groups.all %}
+                      {% if group.name == 'Librarians' %}
+                        <a class="btn btn-primary btn-sm text-start d-flex align-items-center justify-content-between"
+                          href="{% url 'author-create' %}">
+                          <span><i class="bi bi-person-plus me-2"></i>Create Author</span>
+                          <i class="bi bi-chevron-right small"></i>
+                        </a>
+                      {% endif %}
+                    {% endfor %}
+                    {% if perms.catalog.add_book %}
+                      <a class="btn btn-success btn-sm text-start d-flex align-items-center justify-content-between"
+                        href="{% url 'book-create' %}">
+                        <span><i class="bi bi-journal-plus me-2"></i>Create Book</span>
+                        <i class="bi bi-chevron-right small"></i>
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link link-dark" href="{% url 'books' %}">
+                  <i class="bi bi-journal-text"></i> All Books
+                </a>
+              </li>
+            </ul>
+          {% endblock %}
+        </div>
+        <div class="col-sm-10 p-4 content-area">
+          <header class="app-header mb-4">
+            <img
+              src="{% static 'img/logo.png' %}"
+              class="app-logo"
+              alt="My Local Library logo"
+            />
+            <div class="welcome-text">
+              <h1 class="welcome-title mb-1">
+                Welcome to <span>My Local Library</span>
+              </h1>
+              <p class="welcome-subtitle mb-0">
+                Explore, discover, and enjoy the stories waiting for you.
+              </p>
+            </div>
+          </header>
+          <main class="content-panel">
+            {% block content %}{% endblock %}
+          </main>
+          {% block pagination %}
+            {% if is_paginated %}
+              <nav class="pagination-bar mt-4" aria-label="Page navigation">
+                <div class="page-links">
+                  {% if page_obj.has_previous %}
+                    <a class="btn btn-outline-primary btn-sm"
+                      href="{{ request.path }}?page={{ page_obj.previous_page_number }}">
+                      <i class="bi bi-chevron-left"></i> Previous
+                    </a>
+                  {% endif %}
+                  <span class="page-current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                  </span>
+                  {% if page_obj.has_next %}
+                    <a class="btn btn-outline-primary btn-sm"
+                      href="{{ request.path }}?page={{ page_obj.next_page_number }}">
+                      Next <i class="bi bi-chevron-right"></i>
+                    </a>
+                  {% endif %}
+                </div>
+              </nav>
+            {% endif %}
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

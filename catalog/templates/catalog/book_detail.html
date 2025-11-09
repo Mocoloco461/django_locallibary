@@ -1,0 +1,131 @@
+{% extends "base_generic.html" %}
+
+{% block title %}{{ book.title }} · Book Details{% endblock %}
+
+{% block content %}
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-4">
+    <div>
+      <span class="badge rounded-pill text-bg-light border text-uppercase fw-semibold">
+        {{ book.language }}
+      </span>
+      <h2 class="display-6 fw-bold mt-2 mb-3">{{ book.title }}</h2>
+      <p class="text-secondary mb-3">
+        {{ book.summary|default:"לספר הזה עדיין אין תקציר. הוסיפו אותו כדי לעזור לקוראים הבאים." }}
+      </p>
+      <div class="entity-meta">
+        <span>
+          <i class="bi bi-pen me-1"></i>
+          <a href="{{ book.author.get_absolute_url }}">{{ book.author }}</a>
+        </span>
+        <span>
+          <i class="bi bi-upc-scan me-1"></i>{{ book.isbn }}
+        </span>
+        <span>
+          <i class="bi bi-translate me-1"></i>{{ book.language }}
+        </span>
+      </div>
+    </div>
+    {% if book.genre.all %}
+      <div class="d-flex flex-wrap gap-2">
+        {% for genre in book.genre.all %}
+          <span class="badge rounded-pill text-bg-primary-subtle border border-primary-subtle text-primary">
+            <i class="bi bi-bookmark-heart me-1"></i>{{ genre }}
+          </span>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  {% if perms.catalog.change_book or perms.catalog.delete_book %}
+    <div class="d-flex flex-wrap justify-content-end gap-2 mt-3">
+      {% if perms.catalog.change_book %}
+        <a class="btn btn-outline-primary" href="{% url 'book-update' book.pk %}">
+          <i class="bi bi-pencil-square me-1"></i> עדכון ספר
+        </a>
+      {% endif %}
+      {% if perms.catalog.delete_book %}
+        <a class="btn btn-outline-danger" href="{% url 'book-delete' book.pk %}">
+          <i class="bi bi-trash3 me-1"></i> מחיקת ספר
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <section class="info-grid mt-4">
+    <div class="info-item">
+      <strong>מחבר</strong>
+      <a class="fw-semibold" href="{{ book.author.get_absolute_url }}">{{ book.author }}</a>
+    </div>
+    <div class="info-item">
+      <strong>ISBN</strong>
+      <span class="mini-link"><i class="bi bi-upc"></i>{{ book.isbn }}</span>
+    </div>
+    <div class="info-item">
+      <strong>שפה</strong>
+      {{ book.language }}
+    </div>
+    <div class="info-item">
+      <strong>ז׳אנרים</strong>
+      {% if book.genre.all %}
+        {{ book.genre.all|join:", " }}
+      {% else %}
+        <span class="text-muted">עדיין לא הוגדר</span>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="mt-5">
+    <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+      <h3 class="fw-bold mb-0">
+        <i class="bi bi-layers me-2 text-primary"></i>
+        עותקים ומלאי
+      </h3>
+      <span class="badge rounded-pill text-bg-light border">
+        {{ book.bookinstance_set.count }} עותק{% if book.bookinstance_set.count != 1 %}ים{% endif %}
+      </span>
+    </div>
+
+    {% if book.bookinstance_set.all %}
+      <div class="entity-list">
+        {% for copy in book.bookinstance_set.all %}
+          <article class="copy-card">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+              <div class="status-badge
+                {% if copy.status == 'a' %}
+                  status-available
+                {% elif copy.status == 'm' %}
+                  status-maintenance
+                {% else %}
+                  status-on-loan
+                {% endif %}">
+                <i class="bi bi-circle-fill"></i>{{ copy.get_status_display }}
+              </div>
+              <span class="text-muted">
+                <i class="bi bi-hash me-1"></i>{{ copy.id }}
+              </span>
+            </div>
+            <p class="mb-1">
+              <strong>הוצאה:</strong> {{ copy.imprint }}
+            </p>
+            {% if copy.status != 'a' %}
+              <p class="mb-1 text-warning fw-semibold">
+                <i class="bi bi-calendar-event me-1"></i>
+                חוזר למדף: {{ copy.due_back }}
+              </p>
+            {% endif %}
+            {% if copy.status == 'a' %}
+              <p class="text-success fw-semibold mb-0">
+                <i class="bi bi-bookmark-check me-1"></i> זמין להשאלה מידית
+              </p>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <i class="bi bi-box-seam me-2"></i>
+        אין עותקים פעילים עבור הספר הזה כרגע.
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

@@ -1,0 +1,17 @@
+# 
+.env
+
+# Text backup files
+*.bak
+
+# Database
+*.sqlite3
+
+__pycache__/
+*.pyc
+
+.idea/*
+
+out/*
+
+SandBox

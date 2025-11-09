@@ -1,0 +1,58 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <section class="mb-4">
+    <header class="mb-4">
+      <span class="badge rounded-pill text-bg-light border text-uppercase">Book</span>
+      <h2 class="fw-bold mt-2 mb-1">
+        {% if form.instance.pk %}עדכון ספר{% else %}יצירת ספר חדש{% endif %}
+      </h2>
+      <p class="text-secondary mb-0">
+        מלאו את הפרטים של הספר כדי להוסיף אותו לאוסף הספריה או לעדכן רשומה קיימת.
+      </p>
+    </header>
+
+    <form action="" method="post" class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger" role="alert">
+            {% for error in form.non_field_errors %}
+              <div>{{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="row g-4">
+          {% for field in form %}
+            <div class="col-md-6">
+              <label class="form-label fw-semibold" for="{{ field.id_for_label }}">
+                {{ field.label }}
+              </label>
+              <div class="form-control-wrapper">
+                {{ field }}
+              </div>
+              {% if field.help_text %}
+                <div class="form-text">{{ field.help_text|safe }}</div>
+              {% endif %}
+              {% for error in field.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="card-footer bg-white border-0 p-4 pt-0">
+        <div class="d-flex flex-wrap justify-content-end gap-2">
+          <a class="btn btn-outline-secondary" href="{% url 'books' %}">
+            <i class="bi bi-arrow-left me-1"></i> חזרה לרשימת הספרים
+          </a>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-lg me-1"></i>
+            {% if form.instance.pk %}עדכון ספר{% else %}שמירת ספר{% endif %}
+          </button>
+        </div>
+      </div>
+    </form>
+  </section>
+{% endblock %}

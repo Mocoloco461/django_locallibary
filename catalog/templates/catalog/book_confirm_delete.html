@@ -1,0 +1,71 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <section class="mb-4">
+    <header class="mb-4">
+      <span class="badge rounded-pill text-bg-danger-subtle border border-danger-subtle text-danger text-uppercase">
+        <i class="bi bi-exclamation-triangle me-1"></i> זהירות
+      </span>
+      <h2 class="fw-bold mt-2 mb-1">
+        מחיקת ספר: {{ object }}
+      </h2>
+      <p class="text-secondary mb-0">
+        פעולה זו תמחק לצמיתות את רשומת הספר ממאגר הספריה.
+      </p>
+    </header>
+
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        {% if has_bookinstances %}
+          <div class="alert alert-warning d-flex align-items-start gap-2" role="alert">
+            <i class="bi bi-exclamation-octagon-fill fs-4"></i>
+            <div>
+              לא ניתן למחוק את הספר כל עוד קיימים עותקים פעילים שלו. טפלו בעותקים הבאים לפני ניסיון מחיקה נוסף.
+            </div>
+          </div>
+          <ul class="list-group list-group-flush rounded-3 overflow-hidden">
+            {% for instance in bookinstance_list %}
+              <li class="list-group-item d-flex justify-content-between align-items-start gap-3">
+                <div>
+                  <span class="fw-semibold">{{ instance.get_status_display }}</span>
+                  <div class="text-muted small">מזהה: {{ instance.id }}</div>
+                </div>
+                {% if instance.due_back %}
+                  <span class="badge rounded-pill text-bg-light border">
+                    <i class="bi bi-calendar-event me-1"></i>{{ instance.due_back }}
+                  </span>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+          {% if cannot_delete %}
+            <div class="alert alert-danger mt-3 mb-0" role="alert">
+              <i class="bi bi-info-circle me-1"></i> המחיקה נכשלה מאחר שעדיין קיימים עותקים.
+            </div>
+          {% endif %}
+        {% else %}
+          <div class="alert alert-danger" role="alert">
+            <i class="bi bi-trash3 me-2"></i>
+            האם את/ה בטוח/ה שברצונך למחוק את הספר? לא ניתן לבטל פעולה זו.
+          </div>
+          <form action="" method="post" class="mt-3">
+            {% csrf_token %}
+            <div class="d-flex flex-wrap justify-content-end gap-2">
+              <a class="btn btn-outline-secondary" href="{{ object.get_absolute_url }}">
+                <i class="bi bi-arrow-left me-1"></i> ביטול
+              </a>
+              <button type="submit" class="btn btn-danger">
+                <i class="bi bi-check-lg me-1"></i> מחיקת הספר
+              </button>
+            </div>
+          </form>
+        {% endif %}
+      </div>
+      <div class="card-footer bg-white border-0 p-4 pt-0">
+        <a class="btn btn-link text-decoration-none px-0" href="{% url 'books' %}">
+          <i class="bi bi-arrow-return-left me-1"></i> חזרה לרשימת הספרים
+        </a>
+      </div>
+    </div>
+  </section>
+{% endblock %}

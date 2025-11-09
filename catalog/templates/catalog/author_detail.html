@@ -1,0 +1,129 @@
+{% extends "base_generic.html" %}
+
+{% block title %}{{ author.first_name }} {{ author.last_name }} · Author{% endblock %}
+
+{% block content %}
+  {% with book_count=author.book_set.count %}
+    <header class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+      <div>
+        <span class="badge rounded-pill text-bg-light border text-uppercase">Author</span>
+        <h2 class="display-6 fw-bold mb-2">
+          {{ author.first_name }} {{ author.last_name }}
+        </h2>
+        <p class="text-secondary mb-0">
+          גלו את מסלול חייו של המחבר ואת היצירות המרכזיות שיצאו תחת ידיו.
+        </p>
+      </div>
+      <div class="d-flex flex-column align-items-md-end align-items-start gap-3">
+        <span class="badge rounded-pill text-bg-primary-subtle border border-primary-subtle text-primary px-3 py-2">
+          <i class="bi bi-journal-bookmark-fill me-1"></i>
+          {{ book_count }} ספר{% if book_count != 1 %}ים{% endif %}
+        </span>
+        {% if perms.catalog.change_author or perms.catalog.delete_author %}
+          <div class="d-flex flex-wrap justify-content-end gap-2">
+            {% if perms.catalog.change_author %}
+              <a class="btn btn-outline-primary btn-sm" href="{% url 'author-update' author.id %}">
+                <i class="bi bi-pencil-square me-1"></i> עדכון מחבר
+              </a>
+            {% endif %}
+            {% if perms.catalog.delete_author and not book_count %}
+              <a class="btn btn-outline-danger btn-sm" href="{% url 'author-delete' author.id %}">
+                <i class="bi bi-trash3 me-1"></i> מחיקת מחבר
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </header>
+
+  <section class="info-grid">
+    <div class="info-item">
+      <strong>שם פרטי</strong>
+      {{ author.first_name }}
+    </div>
+    <div class="info-item">
+      <strong>שם משפחה</strong>
+      {{ author.last_name }}
+    </div>
+    <div class="info-item">
+      <strong>תאריך לידה</strong>
+      {{ author.date_of_birth|default:"לא ידוע" }}
+    </div>
+    <div class="info-item">
+      <strong>תאריך פטירה</strong>
+      {{ author.date_of_death|default:"עדיין איתנו" }}
+    </div>
+  </section>
+
+  <section class="mt-5">
+    <h3 class="fw-bold mb-3">
+      <i class="bi bi-bookshelf me-2 text-primary"></i>
+      ספרים מאת {{ author.last_name }}
+    </h3>
+
+    {% if author.book_set.all %}
+      <ul class="entity-list list-unstyled mb-0">
+        {% for book in author.book_set.all %}
+          <li class="entity-card">
+            <div class="d-flex flex-wrap align-items-start justify-content-between gap-3">
+              <div>
+                <a class="h5 d-block mb-1" href="{{ book.get_absolute_url }}">
+                  {{ book.title }}
+                </a>
+                <div class="text-secondary">
+                  {{ book.summary|truncatewords:30|default:"אין תיאור זמין לספר זה." }}
+                </div>
+              </div>
+              <div class="d-flex flex-column align-items-end gap-2">
+                {% if book.display_genre %}
+                  <span class="badge rounded-pill text-bg-light border">
+                    <i class="bi bi-bookmarks me-1"></i>{{ book.display_genre }}
+                  </span>
+                {% endif %}
+                <a class="mini-link text-primary" href="{{ book.get_absolute_url }}">
+                  פרטי הספר <i class="bi bi-arrow-up-right ms-1"></i>
+                </a>
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="empty-state">
+        <i class="bi bi-journal-x me-2"></i>
+        טרם נוספו ספרים עבור מחבר זה.
+      </div>
+    {% endif %}
+  </section>
+  {% endwith %}
+{% endblock %}
+
+
+{% block sidebar %}
+  {{ block.super }}
+
+  {% if perms.catalog.change_author or perms.catalog.delete_author %}
+    <div class="border-top pt-3 mt-3">
+      <p class="text-uppercase text-muted small fw-semibold mb-2">Author Actions</p>
+      <div class="d-grid gap-2">
+        {% if perms.catalog.change_author %}
+          <a class="btn btn-outline-primary btn-sm text-start" href="{% url 'author-update' author.id %}">
+            <i class="bi bi-pencil-square me-2"></i> עדכון מחבר
+          </a>
+        {% endif %}
+        {% if perms.catalog.delete_author %}
+          {% if not author.book_set.count %}
+            <a class="btn btn-outline-danger btn-sm text-start" href="{% url 'author-delete' author.id %}">
+              <i class="bi bi-trash3 me-2"></i> מחיקת מחבר
+            </a>
+          {% else %}
+            <div class="alert alert-light border text-secondary mb-0 small">
+              <i class="bi bi-info-circle me-1"></i>
+              לא ניתן למחוק מחבר כל עוד מקושרים אליו ספרים.
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

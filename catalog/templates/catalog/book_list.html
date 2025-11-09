@@ -1,0 +1,65 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Catalog · Books{% endblock %}
+
+{% block content %}
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+    <div>
+      <h2 class="fw-bold mb-1">אוסף הספרים</h2>
+      <p class="text-secondary mb-0">
+        עיינו בכל העותקים שבספרייה, סננו לפי שם או מחבר באמצעות חיפוש הדפדפן, ולחצו לפרטי הספר.
+      </p>
+    </div>
+    {% if book_list %}
+      <span class="badge rounded-pill text-bg-primary px-3 py-2">
+        <i class="bi bi-book me-1"></i> {{ book_list|length }} ספר{% if book_list|length != 1 %}ים{% endif %}
+      </span>
+    {% endif %}
+  </div>
+
+  {% if book_list %}
+    <div class="table-responsive">
+      <table class="data-table table align-middle">
+        <thead>
+          <tr>
+            <th scope="col">שם הספר</th>
+            <th scope="col">מחבר</th>
+            <th scope="col" class="text-center">ז׳אנרים</th>
+            <th scope="col" class="text-end">ISBN</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for book in book_list %}
+            <tr>
+              <td>
+                <a class="fw-semibold" href="{{ book.get_absolute_url }}">
+                  {{ book.title }}
+                </a>
+              </td>
+              <td>{{ book.author }}</td>
+              <td class="text-center">
+                {% if book.display_genre %}
+                  <span class="badge rounded-pill text-bg-light border">
+                    {{ book.display_genre }}
+                  </span>
+                {% else %}
+                  <span class="text-muted">ללא</span>
+                {% endif %}
+              </td>
+              <td class="text-end text-secondary">
+                <span class="mini-link">
+                  <i class="bi bi-upc-scan"></i>{{ book.isbn }}
+                </span>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <i class="bi bi-inboxes me-2"></i>
+      עוד לא נוספו ספרים למדף הדיגיטלי. התחילו עם הכותר הראשון!
+    </div>
+  {% endif %}
+{% endblock %}

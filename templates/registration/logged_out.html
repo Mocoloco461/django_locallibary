@@ -1,0 +1,15 @@
+{% extends "base_generic.html" %}
+
+{% block title %}יצאת מהמערכת{% endblock %}
+
+{% block content %}
+  <section class="form-card text-center">
+    <h2 class="mb-3">נתראה בקרוב!</h2>
+    <p class="text-secondary mb-4">
+      נותקת בהצלחה מהמערכת. כשתהיו מוכנים לחזור לעולם הספרים, תוכלו להתחבר מחדש בלחיצה אחת.
+    </p>
+    <a class="btn btn-primary btn-lg" href="{% url 'login' %}">
+      <i class="bi bi-box-arrow-in-right me-2"></i>חזרה למסך ההתחברות
+    </a>
+  </section>
+{% endblock %}

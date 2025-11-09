@@ -1,0 +1,10 @@
+שלום {{ user.get_username }},
+
+יש לנו בקשה לאיפוס הסיסמה לחשבון שלך ב-Local Library.
+
+כדי לבחור סיסמה חדשה, לחצו על הקישור הבא (בתוך 24 שעות):
+{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}
+
+לא ביקשתם איפוס? התעלמו מההודעה והסיסמה תישאר כפי שהיא.
+
+צוות Local Library

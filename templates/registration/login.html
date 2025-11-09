@@ -1,0 +1,51 @@
+{% extends "base_generic.html" %}
+
+{% block title %}התחברות לחשבון{% endblock %}
+
+{% block content %}
+  <section class="form-card">
+    <h2>ברוכים הבאים!</h2>
+    <p class="form-text mb-4">התחברו כדי להמשיך לדפדף בספרים ולהזמין השאלות חדשות.</p>
+
+    {% if form.errors %}
+      <div class="alert alert-danger shadow-sm" role="alert">
+        <i class="bi bi-exclamation-octagon me-1"></i>
+        שם המשתמש או הסיסמה אינם נכונים. אנא נסו שוב.
+      </div>
+    {% endif %}
+
+    {% if next %}
+      {% if user.is_authenticated %}
+        <div class="alert alert-warning" role="alert">
+          לחשבון הנוכחי אין הרשאות לדף זה. התחברו עם משתמש מורשה.
+        </div>
+      {% else %}
+        <div class="alert alert-info" role="alert">
+          אנא התחברו כדי לצפות בתוכן המבוקש.
+        </div>
+      {% endif %}
+    {% endif %}
+
+    <form method="post" action="{% url 'login' %}" class="d-grid gap-3">
+      {% csrf_token %}
+      <div>
+        <label class="form-label fw-semibold" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+        {{ form.username }}
+      </div>
+      <div>
+        <label class="form-label fw-semibold" for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+        {{ form.password }}
+      </div>
+      <input type="hidden" name="next" value="{{ next }}">
+      <button type="submit" class="btn btn-primary btn-lg">
+        <i class="bi bi-door-open me-2"></i>כניסה לחשבון
+      </button>
+    </form>
+
+    <p class="mt-4 mb-0 text-center">
+      <a class="mini-link text-primary" href="{% url 'password_reset' %}">
+        <i class="bi bi-question-circle"></i> שכחתם סיסמה?
+      </a>
+    </p>
+  </section>
+{% endblock %}

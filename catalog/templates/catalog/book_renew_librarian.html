@@ -1,0 +1,96 @@
+{% extends "base_generic.html" %}
+
+{% block title %}חידוש השאלה · {{ book_instance.book.title }}{% endblock %}
+
+{% block content %}
+  <section class="d-flex flex-column gap-4">
+    <article class="intro-card">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div>
+          <p class="text-uppercase text-secondary fw-semibold mb-1 small">
+            <i class="bi bi-arrow-repeat me-1"></i> חידוש השאלה
+          </p>
+          <h2 class="fw-bold mb-2">{{ book_instance.book.title }}</h2>
+          <p class="mb-0 text-secondary">
+            {{ book_instance.book.author }} · עותק {{ book_instance.id }}
+          </p>
+        </div>
+        <span class="status-badge {% if book_instance.is_overdue %}status-maintenance{% else %}status-on-loan{% endif %}">
+          <i class="bi bi-calendar-event"></i>
+          {% if book_instance.is_overdue %}
+            פג תוקף {{ book_instance.due_back }}
+          {% else %}
+            אמור לחזור {{ book_instance.due_back }}
+          {% endif %}
+        </span>
+      </div>
+      <div class="info-grid mt-3">
+        <div class="info-item">
+          <strong>שואל נוכחי</strong>
+          <span class="fw-semibold">{{ book_instance.borrower|default:"לא משויך" }}</span>
+        </div>
+        <div class="info-item">
+          <strong>מספר כרטיס</strong>
+          <span class="mini-link">
+            <i class="bi bi-upc-scan"></i>{{ book_instance.book.isbn }}
+          </span>
+        </div>
+      </div>
+    </article>
+
+    <div class="form-card">
+      <h2 class="h4 fw-bold mb-3">בחרו תאריך החזרה חדש</h2>
+      <p class="form-text mb-4">
+        ניתן להאריך עד 4 שבועות קדימה מהיום. ודאו שתיאמתם מול הקורא לפני הארכה נוספת.
+      </p>
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% with field=form.renewal_date %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold" for="{{ field.id_for_label }}">
+              תאריך החזרה חדש
+            </label>
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="bi bi-calendar-week"></i>
+              </span>
+              <input
+                type="date"
+                name="{{ field.html_name }}"
+                id="{{ field.id_for_label }}"
+                value="{{ field.value|default_if_none:'' }}"
+                class="form-control{% if field.errors %} is-invalid{% endif %}"
+                {% if field.field.required %}required{% endif %}
+                {% if field.field.disabled %}disabled{% endif %}
+              />
+            </div>
+            <div class="form-text">
+              הזינו תאריך בין היום לבין ארבעה שבועות קדימה.
+            </div>
+            {% if field.errors %}
+              <div class="invalid-feedback d-block">
+                {{ field.errors|striptags }}
+              </div>
+            {% endif %}
+          </div>
+        {% endwith %}
+
+        <div class="d-flex flex-wrap gap-2 mt-4">
+          <button type="submit" class="btn btn-primary flex-grow-1">
+            <i class="bi bi-check-circle me-1"></i> אשרו חידוש
+          </button>
+          <a href="{{ book_instance.book.get_absolute_url }}" class="btn btn-outline-secondary flex-grow-1">
+            <i class="bi bi-arrow-left-short"></i> חזרה לפרטי הספר
+          </a>
+        </div>
+      </form>
+    </div>
+  </section>
+{% endblock %}

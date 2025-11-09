@@ -1,0 +1,72 @@
+{% extends "base_generic.html" %}
+
+{% block title %}My Borrowed Books{% endblock %}
+
+{% block content %}
+  <header class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">הספרים המושאלים שלי</h2>
+      <p class="text-secondary mb-0">
+        עקבו אחרי תאריכי ההחזרה שלכם, בדקו מי מהספרים בפיגור ותכננו את הקריאה הבאה.
+      </p>
+    </div>
+    {% if bookinstance_list %}
+      <span class="badge rounded-pill text-bg-primary-subtle border border-primary-subtle text-primary px-3 py-2">
+        <i class="bi bi-clock-history me-1"></i>
+        {{ bookinstance_list|length }} השאל{% if bookinstance_list|length != 1 %}ות{% endif %}
+      </span>
+    {% endif %}
+  </header>
+
+  {% if bookinstance_list %}
+    <ul class="entity-list list-unstyled mb-0">
+      {% for bookinst in bookinstance_list %}
+        <li class="entity-card {% if bookinst.is_overdue %}border border-danger-subtle{% endif %}">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+            <div>
+              <a class="h5 fw-semibold d-block mb-1" href="{% url 'book-detail' bookinst.book.pk %}">
+                {{ bookinst.book.title }}
+              </a>
+              <div class="entity-meta">
+                <span><i class="bi bi-person me-1"></i>{{ bookinst.book.author }}</span>
+                <span><i class="bi bi-upc-scan me-1"></i>{{ bookinst.book.isbn }}</span>
+                {% if bookinst.borrower %}
+                    <span><i class="bi bi-person-badge me-1"></i>
+                      הושאל על ידי: {{ bookinst.borrower.get_full_name|default:bookinst.borrower.username }}
+                    </span>
+                {% else %}
+                    <span><i class="bi bi-person-badge me-1"></i>הושאל על ידי: לא ידוע</span>
+                {% endif %}
+              </div>
+            </div>
+            <div class="text-md-end">
+              <span class="status-badge {% if bookinst.is_overdue %}status-maintenance{% else %}status-on-loan{% endif %}">
+                <i class="bi bi-calendar-event me-1"></i>
+                החזרה ב- {{ bookinst.due_back }}
+              </span>
+                <a class="btn btn-sm btn-outline-primary ms-2" href="{% url 'renew-book-librarian' bookinst.id %}">
+                  <i class="bi bi-arrow-repeat me-1"></i> חידוש
+                </a>
+              {% if bookinst.is_overdue %}
+                <p class="text-danger fw-semibold mb-0 mt-2">
+                  <i class="bi bi-exclamation-triangle me-1"></i>
+                  איחור! אנא החזר/י בהקדם.
+                </p>
+              {% else %}
+                <p class="text-success mb-0 mt-2">
+                  <i class="bi bi-check-circle me-1"></i>
+                  הספר אצלך בזמן.
+                </p>
+              {% endif %}
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="empty-state">
+      <i class="bi bi-emoji-smile me-2"></i>
+      אין כרגע ספרים מושאלים על שמך. בחרו את הספר הבא שתרצו לקרוא!
+    </div>
+  {% endif %}
+{% endblock %}
