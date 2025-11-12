@@ -1,6 +1,6 @@
 asgiref==3.10.0
 diff-match-patch==20241021
-Django==4.2.25
+Django>=5.0
 django-import-export==4.3.12
 django-sequences==3.0
 sqlparse==0.5.3
@@ -12,3 +12,5 @@ whitenoise==6.11.0
 gunicorn==21.2.0
 psycopg2-binary==2.9.9
 wheel==0.38.1
+Django>=5.0
+psycopg[binary,pool]>=3.2
