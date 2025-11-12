@@ -41,15 +41,14 @@ DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 
 ALLOWED_HOSTS = [
-    'djangolocallibary-production.up.railway.app',
+    'local-l-django-production.up.railway.app',
     '127.0.0.1',
     'localhost',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://djangolocallibary-production.up.railway.app',
+    'https://local-l-django-production.up.railway.app',
 ]
-
 
 # Application definition
 
