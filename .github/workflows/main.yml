@@ -1,0 +1,36 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  django-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: django build-in tests
+      run: | 
+        pip install -r requirements.txt
+        python mange.py test
+      
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    
+    - uses: actions/checkout@v4
+    
+    - name: run test
+      run: docker compose up -d
+
+
+
+
+
+      #   - name: Build the Docker image
+      # run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
