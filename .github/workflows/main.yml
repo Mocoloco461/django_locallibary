@@ -18,7 +18,8 @@ jobs:
     
     - name: django build-in tests
       run: | 
-        docker compose -f docker-compose-test.yaml up -d 
+        docker compose -f docker-compose-test.yaml up -d
+        docker logs app_libary
       
   
   # docker_test:

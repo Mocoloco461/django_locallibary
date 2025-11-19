@@ -1,5 +1,6 @@
 services:
   db:
+    container_name: db-locallibary
     image: postgres:15
     restart: unless-stopped
     environment:
@@ -13,7 +14,11 @@ services:
 
   app_libary:
     #build: .
+    container_name: app-locallibary
     image: locallibary:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: >
       sh -c "
         python manage.py migrate &&
