@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+       - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app_libary:
+    #build: .
+    image: locallibary:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      sh -c "
+        python manage.py migrate &&
+        python manage.py collectstatic --no-input &&
+        python manage.py test
+      "
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+    ports:
+      - "6060:8000"
+    depends_on:
+      - db
+    restart: "no"
+
+volumes:
+  pgdata:
+
+
+
+
+      # python manage.py migrate &&
+      # python manage.py runserver
+
+
+      #python manage.py migrate &&
+      #python manage.py runserver 0.0.0.0:8000
