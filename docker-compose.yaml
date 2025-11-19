@@ -26,7 +26,7 @@ services:
         gunicorn locallibary.wsgi:application --bind 0.0.0.0:8000
       "
     environment:
-      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      DATABASE_URL: ${DATABASE_URL}
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
     ports:
       - "6060:8000"
