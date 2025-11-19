@@ -18,7 +18,7 @@ jobs:
     
     - name: django build-in tests
       run: | 
-        docker compose -f docker-compose-test.yaml up --build --exit-code-from app-locallibary
+        docker compose -f docker-compose-test.yaml up --build --exit-code-from app_libary
       
   
   # docker_test:
