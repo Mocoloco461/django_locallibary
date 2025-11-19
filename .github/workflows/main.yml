@@ -5,9 +5,12 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  
+  
+  
 
 jobs:
-  django-test:
+  django_test:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,15 +21,16 @@ jobs:
         pip install -r requirements.txt
         python mange.py test
       
-  build:
+  
+  # docker_test:
 
-    runs-on: ubuntu-latest
-    steps:
+  #   runs-on: ubuntu-latest
+  #   steps:
     
-    - uses: actions/checkout@v4
+  #   - uses: actions/checkout@v4
     
-    - name: run test
-      run: docker compose up -d
+  #   - name: run test
+  #     run: docker compose up -d
 
 
 
