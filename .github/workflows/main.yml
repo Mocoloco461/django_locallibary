@@ -22,9 +22,12 @@ jobs:
       
       - name: django build-in tests
         env: 
-          POSTGRES_DB: ${{ secrets.PPOSTGRES_DB}}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB}}
           POSTGRES_USER: ${{ secrets.POSTGRES_USER}}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD}}
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DATABASE_URL: postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DB }}
+
         run: | 
           docker compose -f docker-compose-test.yaml up --build --exit-code-from app_libary
           docker logs app_libary
