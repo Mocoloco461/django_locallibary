@@ -27,6 +27,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD}}
         run: | 
           docker compose -f docker-compose-test.yaml up --build --exit-code-from app_libary
+          docker logs app_libary
         
     
     # docker_test:
