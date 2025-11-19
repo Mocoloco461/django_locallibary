@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "ci/cd" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
   
@@ -30,9 +30,7 @@ jobs:
 
         run: | 
           docker compose -f docker-compose-test.yaml up --build --exit-code-from app_libary
-          docker logs app-locallibary
-        
-    
+
     # docker_test:
 
     #   runs-on: ubuntu-latest
