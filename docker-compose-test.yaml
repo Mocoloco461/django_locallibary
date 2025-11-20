@@ -19,12 +19,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: >
-      sh -c "
-        #python manage.py migrate &&
-        #python manage.py collectstatic --no-input &&
-        python manage.py test
-      "
+    command: python manage.py test
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
