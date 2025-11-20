@@ -28,6 +28,7 @@ services:
     depends_on:
       - db
     restart: "no"
+    
 
 volumes:
   pgdata:

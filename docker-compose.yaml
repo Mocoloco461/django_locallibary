@@ -23,6 +23,7 @@ services:
       sh -c "
         python manage.py migrate &&
         python manage.py collectstatic --no-input &&
+        python manage.py check --database default &&
         gunicorn locallibary.wsgi:application --bind 0.0.0.0:8000
       "
     environment:
@@ -33,6 +34,11 @@ services:
     depends_on:
       - db
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pgdata:

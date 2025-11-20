@@ -18,7 +18,7 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      
+
       - name: build and test
         id: build_and_test
         env: 
@@ -26,9 +26,10 @@ jobs:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER}}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD}}
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          DATABASE_URL: postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DB }}
+          DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
 
         run: docker compose -f docker-compose-test.yaml up --build --exit-code-from app_libary
+
 
       - name: docker login
         id: docker_login
@@ -48,6 +49,10 @@ jobs:
           tags: |
             ${{secrets.DOCKEHUB_USERNAME}}/django_locallibary:latest
             ${{secrets.DOCKEHUB_USERNAME}}/django_locallibary:${{github.run_number}}
+
+
+      - name: productions build
+        run: docker compose up
 
     # docker_test:
 
