@@ -16,7 +16,7 @@ run_docker:
     - ls
   artifacts:
     paths:
-      - app-locallibary.tar
+      - locallibary.tar
     expire_in: '1 hour'
 
 
@@ -24,6 +24,6 @@ push_image:
   stage: push
   image: alpine
   script:
-    - ls
+
   dependencies:
     - run_docker
