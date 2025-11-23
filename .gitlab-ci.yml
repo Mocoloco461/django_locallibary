@@ -13,7 +13,7 @@ run_docker:
     - docker compose -f docker-compose-test.yaml up --build --exit-code-from app_libary
     - docker save -o app-locallibary.tar app-locallibary
   artifacts:
-    path:
+    paths:
       - app-locallibary.tar
       - ci_images
     expire_in: '1 hour'
