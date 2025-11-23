@@ -1,7 +1,7 @@
 run_docker:
-  image: docker:24.0.5
+  image: alpine #docker:24.0.5
   services:
     - docker:24.0.5-dind
   script:
     - echo "Mocoloco461 - testing docker"
-    - echo ${POSTGRES_DB}
+    - echo $POSTGRES_DB
