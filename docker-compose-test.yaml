@@ -4,9 +4,9 @@ services:
     image: postgres:15
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${POSTGRES_DB_TEST}
-      POSTGRES_USER: ${POSTGRES_USER_TEST}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_TEST}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
        - pgdata:/var/lib/postgresql/data
     ports:
@@ -21,8 +21,8 @@ services:
       dockerfile: Dockerfile
     command: python manage.py test
     environment:
-      DATABASE_URL: postgres://${POSTGRES_USER_TEST}:${POSTGRES_PASSWORD_TEST}@db:5432/${POSTGRES_DB_TEST}
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY_TEST}
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
     ports:
       - "6060:8000"
     depends_on:
