@@ -1,9 +1,13 @@
+stage:
+  - build
+  - push
+
+
 run_docker:
   stage: build
-  image: alpine #docker:24.0.5
-  #services:
-  #  - docker:24.0.5-dind
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
   script:
-    - echo "Mocoloco461 - testing docker"
-    - echo $POSTGRES_USER
-    - echo ${POSTGRES_USER}
+    DATABASE_URL=postgres://${POSTGRES_USER_TEST}:${POSTGRES_PASSWORD_TEST}@db:5432/${POSTGRES_DB_TEST}
+    docker compose -f docker-compose-test.yaml up --build --exit-code-from app_libary
