@@ -1,0 +1,5 @@
+run_docker:
+  image: alpine
+  script:
+    - echo "Mocoloco461 - testing docker"
+    - docker run hello-world
