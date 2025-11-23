@@ -33,7 +33,7 @@ run_the_app:
     - curl localhost:6060 && echo $?
 
   dependencies:
-    - run_docker
+    - test_via_django_tests
 
 
 # here i pushing the last image
