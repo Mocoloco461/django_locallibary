@@ -4,4 +4,4 @@ run_docker:
     - docker:24.0.5-dind
   script:
     - echo "Mocoloco461 - testing docker"
-    - docker run hello-world
+    - echo ${POSTGRES_DB}
