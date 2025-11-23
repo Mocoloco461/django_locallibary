@@ -24,6 +24,7 @@ push_image:
   stage: push
   image: alpine
   script:
-    - ls
+    - ls #docker load -i locallibary.tar
+
   dependencies:
     - run_docker
