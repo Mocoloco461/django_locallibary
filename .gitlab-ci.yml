@@ -12,10 +12,11 @@ run_docker:
     - DATABASE_URL=postgres://${POSTGRES_USER_TEST}:${POSTGRES_PASSWORD_TEST}@db:5432/${POSTGRES_DB_TEST}
     - docker compose -f docker-compose-test.yaml up --build --exit-code-from app_libary
     - docker save -o locallibary.tar locallibary:latest
+    - echo $?
+    - ls
   artifacts:
     paths:
       - app-locallibary.tar
-      - ci_images
     expire_in: '1 hour'
 
 
@@ -26,4 +27,3 @@ push_image:
     - ls
   dependencies:
     - run_docker
-  
