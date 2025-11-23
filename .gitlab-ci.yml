@@ -1,10 +1,11 @@
 stages:
-  - build
+  - build_and_test
+  - buid_and_run
   - push
 
 
-run_docker:
-  stage: build
+test_via_django_tests:
+  stage: build_and_test
   image: docker:24.0.5
   services:
     - docker:24.0.5-dind
@@ -20,10 +21,32 @@ run_docker:
     expire_in: '1 hour'
 
 
-push_image:
-  stage: push
+run_the_app:
+  stage: buid_and_run
   image: alpine
   script:
-    - ls #docker load -i locallibary.tar
+    - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    - docker load -i locallibary.tar
+    - docker compose up -d 
+    # none prodactions thing !!! need to use health of the continer!!!
+    - sleep 20
+    - curl localhost:6060 && echo $?
+
   dependencies:
     - run_docker
+
+
+# here i pushing the last image
+
+# push_image:
+
+#   image: docker:24.0.5-cli
+#   stage: build
+#   services:
+#     - docker:24.0.5-dind
+#   variables:
+#     IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+#   script:
+#     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+#     - docker build -t $IMAGE_TAG .
+#     - docker push $IMAGE_TAG

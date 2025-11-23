@@ -42,7 +42,4 @@ services:
 
 volumes:
   pgdata:
-
-
-
-
+  
