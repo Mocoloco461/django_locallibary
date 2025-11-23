@@ -11,3 +11,19 @@ run_docker:
   script:
     DATABASE_URL=postgres://${POSTGRES_USER_TEST}:${POSTGRES_PASSWORD_TEST}@db:5432/${POSTGRES_DB_TEST}
     docker compose -f docker-compose-test.yaml up --build --exit-code-from app_libary
+    docker save -o app-locallibary.tar app-locallibary
+  artifacts:
+    path:
+      - app-locallibary.tar
+      - ci_images
+    expire_in: '1 hour'
+
+
+push_image:
+  stage: push
+  image: alpine
+  script:
+    ls
+  dependencies:
+    - run_docker
+  
