@@ -24,6 +24,6 @@ push_image:
   stage: push
   image: alpine
   script:
-
+    - ls
   dependencies:
     - run_docker
