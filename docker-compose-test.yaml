@@ -12,7 +12,7 @@ services:
     ports:
       - "5432:5432"
 
-  app_libary:
+  app-libary:
     #build: .
     container_name: app-locallibary
     image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary
