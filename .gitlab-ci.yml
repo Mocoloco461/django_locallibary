@@ -47,6 +47,7 @@ push_image:
   script:
     - echo "$DOCKER_HUB_TOKEN" | docker login --username $DOCKER_HUB_USERNAME --password-stdin
     - docker load -i locallibary.tar
+    - docker tag locallibary:latest $IMAGE_TAG
     - docker push $IMAGE_TAG
 
   dependencies:
