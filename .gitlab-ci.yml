@@ -42,9 +42,9 @@ push_image:
   stage: push
   services:
     - docker:24.0.5-dind
-  variables:
-    IMAGE_TAG: $CI_REGISTRY/$CI_PROJECT_PATH/$IMAGE_NAME:$CI_COMMIT_REF_SLUG
+    
   script:
+    - export IMAGE_TAG=$(echo "$CI_REGISTRY/$CI_PROJECT_PATH/$IMAGE_NAME:$CI_COMMIT_REF_SLUG" | tr '[:upper:]' '[:lower:]')
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin
     - docker load -i locallibary.tar
     - docker tag locallibary:latest $IMAGE_TAG
