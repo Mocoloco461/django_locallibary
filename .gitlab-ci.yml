@@ -39,7 +39,7 @@ test_via_django_tests:
 
 push_image:
   image: docker:24.0.5-cli
-  stage: build
+  stage: push
   services:
     - docker:24.0.5-dind
   variables:
@@ -51,4 +51,3 @@ push_image:
 
   dependencies:
     - test_via_django_tests
-    
