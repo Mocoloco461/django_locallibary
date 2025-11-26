@@ -15,7 +15,7 @@ services:
   app_libary:
     #build: .
     container_name: app-locallibary
-    image: locallibary:latest
+    image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary
     build:
       context: .
       dockerfile: Dockerfile
@@ -23,8 +23,7 @@ services:
       sh -c "
         python manage.py migrate &&
         python manage.py collectstatic --no-input &&
-        python manage.py check --database default &&
-        gunicorn locallibary.wsgi:application --bind 0.0.0.0:8000
+         gunicorn locallibary.wsgi:application --bind 0.0.0.0:8000
       "
     environment:
       DATABASE_URL: ${DATABASE_URL}

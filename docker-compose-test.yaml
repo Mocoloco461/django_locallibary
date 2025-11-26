@@ -15,7 +15,7 @@ services:
   app_libary:
     #build: .
     container_name: app-locallibary
-    image: locallibary:latest
+    image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary
     build:
       context: .
       dockerfile: Dockerfile
@@ -32,13 +32,3 @@ services:
 
 volumes:
   pgdata:
-
-
-
-
-      # python manage.py migrate &&
-      # python manage.py runserver
-
-
-      #python manage.py migrate &&
-      #python manage.py runserver 0.0.0.0:8000
