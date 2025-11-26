@@ -43,7 +43,7 @@ push_image:
   services:
     - docker:24.0.5-dind
   variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    IMAGE_TAG: $DOCKER_HUB_USERNAME/$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   script:
     - echo "$DOCKER_HUB_TOKEN" | docker login --username $DOCKER_HUB_USERNAME --password-stdin
     - docker load -i locallibary.tar
