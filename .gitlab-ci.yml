@@ -13,40 +13,42 @@ test_via_django_tests:
     - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
     - docker compose -f docker-compose-test.yaml up --build --exit-code-from app_libary
     - docker save -o locallibary.tar locallibary:latest
-    - echo $?
-    - ls
+    
   artifacts:
     paths:
       - locallibary.tar
     expire_in: '1 hour'
 
 
-run_the_app:
-  stage: buid_and_run
-  image: alpine
-  script:
-    - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
-    - docker load -i locallibary.tar
-    - docker compose up -d 
-    # none prodactions thing !!! need to use health of the continer!!!
-    - sleep 20
-    - curl localhost:6060 && echo $?
+# run_the_app:
+#   stage: buid_and_run
+#   image: alpine
+#   script:
+#     - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+#     - docker load -i locallibary.tar
+#     - docker compose up -d 
+#     # none prodactions thing !!! need to use health of the continer!!!
+#     - sleep 20
+#     - curl localhost:6060 && echo $?
 
-  dependencies:
-    - test_via_django_tests
+#   dependencies:
+#     - test_via_django_tests
 
 
 # here i pushing the last image
 
-# push_image:
+push_image:
+  image: docker:24.0.5-cli
+  stage: build
+  services:
+    - docker:24.0.5-dind
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  script:
+    - echo "$DOCKER_HUB_TOKEN" | docker login --username $DOCKER_HUB_USERNAME --password-stdin
+    - docker load -i locallibary.tar
+    - docker push $IMAGE_TAG
 
-#   image: docker:24.0.5-cli
-#   stage: build
-#   services:
-#     - docker:24.0.5-dind
-#   variables:
-#     IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-#   script:
-#     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
-#     - docker build -t $IMAGE_TAG .
-#     - docker push $IMAGE_TAG
+  dependencies:
+    - test_via_django_tests
+    
