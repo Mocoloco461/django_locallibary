@@ -21,7 +21,8 @@ test_via_django_tests:
     - docker push $IMAGE_TAG
   rules:
     - if: $CI_COMMIT_BRANCH == "prodtest"
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_MESSAGE =~ /^build:/
 
 
 
