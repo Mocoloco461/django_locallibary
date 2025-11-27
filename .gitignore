@@ -18,5 +18,4 @@ SandBox/
 database/
 
 .DS_Store
-
-docker-compose-k3s.yaml
+k3s
