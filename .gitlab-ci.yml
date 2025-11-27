@@ -12,19 +12,19 @@ test_via_django_tests:
   script:
     - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
     - docker compose -f docker-compose-test.yaml up --build --exit-code-from app-libary
-    - docker save -o locallibary.tar locallibary:latest
+    # - docker save -o locallibary.tar locallibary:latest
     # build test puhs all in one
     - export IMAGE_TAG=$(echo "$CI_REGISTRY/$CI_PROJECT_PATH/$IMAGE_NAME:$CI_COMMIT_REF_SLUG" | tr '[:upper:]' '[:lower:]')
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin
-    - docker load -i locallibary.tar
+    # - docker load -i locallibary.tar
     - docker tag locallibary:latest $IMAGE_TAG
     - docker push $IMAGE_TAG
 
     
-  artifacts:
-    paths:
-      - locallibary.tar
-    expire_in: '1 hour'
+  # artifacts:
+  #   paths:
+  #     - locallibary.tar
+  #   expire_in: '1 hour'
 
 
 # run_the_app:
