@@ -13,6 +13,13 @@ test_via_django_tests:
     - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
     - docker compose -f docker-compose-test.yaml up --build --exit-code-from app-libary
     - docker save -o locallibary.tar locallibary:latest
+    # build test puhs all in one
+    - export IMAGE_TAG=$(echo "$CI_REGISTRY/$CI_PROJECT_PATH/$IMAGE_NAME:$CI_COMMIT_REF_SLUG" | tr '[:upper:]' '[:lower:]')
+    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin
+    - docker load -i locallibary.tar
+    - docker tag locallibary:latest $IMAGE_TAG
+    - docker push $IMAGE_TAG
+
     
   artifacts:
     paths:
@@ -37,18 +44,18 @@ test_via_django_tests:
 
 # here i pushing the last image
 
-push_image:
-  image: docker:24.0.5-cli
-  stage: push
-  services:
-    - docker:24.0.5-dind
+# push_image:
+#   image: docker:24.0.5-cli
+#   stage: push
+#   services:
+#     - docker:24.0.5-dind
     
-  script:
-    - export IMAGE_TAG=$(echo "$CI_REGISTRY/$CI_PROJECT_PATH/$IMAGE_NAME:$CI_COMMIT_REF_SLUG" | tr '[:upper:]' '[:lower:]')
-    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin
-    - docker load -i locallibary.tar
-    - docker tag locallibary:latest $IMAGE_TAG
-    - docker push $IMAGE_TAG
+#   script:
+#     - export IMAGE_TAG=$(echo "$CI_REGISTRY/$CI_PROJECT_PATH/$IMAGE_NAME:$CI_COMMIT_REF_SLUG" | tr '[:upper:]' '[:lower:]')
+#     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin
+#     - docker load -i locallibary.tar
+#     - docker tag locallibary:latest $IMAGE_TAG
+#     - docker push $IMAGE_TAG
 
-  dependencies:
-    - test_via_django_tests
+#   dependencies:
+#     - test_via_django_tests
