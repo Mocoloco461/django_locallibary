@@ -12,7 +12,7 @@ services:
     ports:
       - "5432:5432"
 
-  app_libary:
+  app-libary:
     #build: .
     container_name: app-locallibary
     image: locallibary:latest
@@ -23,8 +23,7 @@ services:
       sh -c "
         python manage.py migrate &&
         python manage.py collectstatic --no-input &&
-        python manage.py check --database default &&
-        gunicorn locallibary.wsgi:application --bind 0.0.0.0:8000
+         gunicorn locallibary.wsgi:application --bind 0.0.0.0:8000
       "
     environment:
       DATABASE_URL: ${DATABASE_URL}
@@ -42,13 +41,4 @@ services:
 
 volumes:
   pgdata:
-
-
-
-
-      # python manage.py migrate &&
-      # python manage.py runserver
-
-
-      #python manage.py migrate &&
-      #python manage.py runserver 0.0.0.0:8000
+  
