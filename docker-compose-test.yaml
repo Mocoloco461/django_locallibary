@@ -19,26 +19,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: >
-      sh -c "
-        python manage.py migrate &&
-        python manage.py collectstatic --no-input &&
-         gunicorn locallibary.wsgi:application --bind 0.0.0.0:8000
-      "
+    command: python manage.py test
     environment:
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
     ports:
       - "6060:8000"
     depends_on:
       - db
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    restart: "no"
+    
 
 volumes:
   pgdata:
-  
