@@ -1,5 +1,7 @@
 # 
 .env
+credentials.auto.tfvars
+init_var.sh
 
 # Text backup files
 *.bak
@@ -19,3 +21,11 @@ database/
 
 .DS_Store
 k3s
+
+# terraform:
+terraform.tfstate.backup
+.terraform
+terraform.tfstate
+
+
+nodata
