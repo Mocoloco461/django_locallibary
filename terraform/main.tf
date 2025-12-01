@@ -34,9 +34,11 @@ resource "aws_instance" "k3s-master" {
   vpc_security_group_ids = [aws_security_group.open_to_the_world.id]
   private_ip             = var.MASTER_A_IP
 
+
   user_data = templatefile("${path.module}/scripts/set_first_master.sh",
     {
-      AGENT_TOKEN = var.AGENT_TOKEN
+      AGENT_TOKEN  = var.AGENT_TOKEN
+      MASTER_TOKEN = var.MASTER_TOKEN
   })
 
   tags = {
