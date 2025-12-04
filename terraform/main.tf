@@ -48,6 +48,7 @@ resource "aws_instance" "k3s-master" {
 }
 
 resource "aws_instance" "k3s-agent" {
+  count                  = 1
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = "m7i-flex.large"
   subnet_id              = aws_subnet.Main.id
