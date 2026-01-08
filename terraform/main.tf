@@ -67,4 +67,3 @@ resource "aws_instance" "k3s-agent" {
 }
 
 
-
