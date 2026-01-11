@@ -3,16 +3,16 @@ kind: Deployment
 metadata: 
   name: postgres-deployment
   labels:
-    app: postgres
+    app.kubernetes.io/postgres: postgres
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app.kubernetes.io/postgres: postgres
   template:
     metadata:
       labels:
-        app: postgres
+        app.kubernetes.io/postgres: postgres
     spec:
     
       containers:
