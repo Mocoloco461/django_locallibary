@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: locallibary
-        image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary:terraform-aws
+        image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary:prodtest
         ports:
         - containerPort: 8000
         command: ["gunicorn"]
