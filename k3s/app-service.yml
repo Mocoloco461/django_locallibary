@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: locallibary
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app.kubernetes.io/locallibary: locallibary
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8000ד
+      targetPort: 8000
