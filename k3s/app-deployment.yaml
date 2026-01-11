@@ -18,7 +18,7 @@ spec:
       - name: locallibary
         image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary:terraform-aws
         ports:
-        - containerPort: 6060
+        - containerPort: 8000
         command: ["gunicorn"]
         args: ["locallibary.wsgi:application", "--bind" ,"0.0.0.0:8000"]
         
