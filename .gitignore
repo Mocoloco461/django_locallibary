@@ -1,5 +1,7 @@
 # 
 .env
+credentials.auto.tfvars
+init_var.sh
 
 # Text backup files
 *.bak
@@ -8,7 +10,7 @@
 *.sqlite3
 
 __pycache__/
-*.pyc
+*.pycg
 
 .idea/*
 
@@ -19,3 +21,12 @@ database/
 
 .DS_Store
 k3s
+
+# terraform:
+terraform.tfstate.backup
+.terraform
+terraform.tfstate
+.terraform.tfstate.lock.info
+
+
+nodata
