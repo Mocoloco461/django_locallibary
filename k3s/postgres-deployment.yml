@@ -44,7 +44,7 @@ spec:
                 name: env
                 key: POSTGRES_PASSWORD
 
-    volumes:
-    - name: postgres-volume
-      persistentVolumeClaim:
-        claimName: postgres-pvc
+      volumes:
+      - name: postgres-volume
+        persistentVolumeClaim:
+          claimName: postgres-pvc
