@@ -10,7 +10,7 @@ init_var.sh
 *.sqlite3
 
 __pycache__/
-*.pyc
+*.pycg
 
 .idea/*
 
