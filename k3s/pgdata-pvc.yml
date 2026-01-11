@@ -5,6 +5,6 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  resource: 
+  resources: 
     requests:
       sotrage: 10Gi
