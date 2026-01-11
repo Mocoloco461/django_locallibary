@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment
+  labels:
+    app: locallibary-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/locallibary: locallibary
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/locallibary: locallibary
+    spec:
+      containers:
+      - name: locallibary
+        image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary:terraform-aws
+        ports:
+        - containerPort: 8000
+        command: ["gunicorn"]
+        args: ["locallibary.wsgi:application", "--bind" ,"0.0.0.0:8000"]
+        
+        env:
+          - name: DATABASE_URL
+            valueFrom: 
+              secretKeyRef:
+                name: env
+                key: DATABASE_URL
+
+          - name: DJANGO_SECRET_KEY
+            valueFrom: 
+              secretKeyRef:
+                name: env
+                key: DJANGO_SECRET_KEY
+            
