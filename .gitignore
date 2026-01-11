@@ -20,7 +20,6 @@ SandBox/
 database/
 
 .DS_Store
-k3s
 
 # terraform:
 terraform.tfstate.backup
