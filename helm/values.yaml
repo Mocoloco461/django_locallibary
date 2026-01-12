@@ -1,0 +1,60 @@
+services:
+  app:
+    metadata: locallibary
+    selector:
+      key: app
+      volume: locallibary
+    ports:
+      protocol: TCP
+      port: 80
+      targetPort: 8000
+
+  db:
+    metadata: postgres
+    selector:
+      key: db
+      volume: postgres
+    ports:
+      protocol: TCP
+      port: 5432
+      targetPort: 5432
+
+
+app-ingress:
+  metadata: locallibary-ingress
+  annotations:
+    volume: traefik
+  spec:
+    rules:
+      http:
+        paths:
+          path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: locallibary
+              port:
+                number: 80
+
+secrets:
+  metadata:
+    name: env
+    namespace: default
+  type: Opaque
+  stringData: 
+    POSTGRES_DB: locallibrary
+    POSTGRES_USER: root
+    POSTGRES_PASSWORD: "aCYpomL8k*rE4q2pRyiFsnaG"
+    DATABASE_URL: "postgresql://root:aCYpomL8k*rE4q2pRyiFsnaG@postgres:5432/locallibrary"
+    DJANGO_SECRET_KEY: "3it^zhra&=gd*4*b2_%y#&j@1=xdfku*800iht*ZK93slffA2!"
+    DJANGO_DEBUG: "False"
+
+
+service-pvc:
+  metadata:
+    name: postgres-pvc
+  spec:
+    accessModes: ReadWriteOnce
+    resources: 
+      requests:
+        storage: 10Gi

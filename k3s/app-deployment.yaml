@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: app-deployment
   labels:
-    app: locallibary-deployment
+    app.kubernetes.io/locallibary: locallibary-deployment
 spec:
   replicas: 1
   selector:
