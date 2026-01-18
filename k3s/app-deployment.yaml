@@ -38,6 +38,7 @@ spec:
         image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary:prodtest
         ports:
         - containerPort: 8000
+        
         command: ["/bin/bash", "-c"]
         args:
           - |

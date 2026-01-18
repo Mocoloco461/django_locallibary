@@ -1,15 +1,19 @@
-{{- range $serviceName, $serviceConfig := .Values.services}}
+{{- range $serviceName, $serviceConfig := .Values.services }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{.metadata}}
+  name: {{$serviceConfig.metadata}}
+  labels:
+    app.kubernetes.io/name: {{ $serviceName }}
 spec:
   type: ClusterIP
   selector:
-    app.kubernetes.io/{{.Values.app-service.selector.key}}: {{.Values.app-service.selector.volume}}
+    app.kubernetes.io/{{$serviceConfig.selector.key}}: {{$serviceConfig.selector.volume}}
   ports:
-    - protocol: {{.Values.app-service.ports.protocol}}
-      port: {{.Values.app-service.ports.port}}
-      targetPort: {{.Values.app-service.ports.targetPort}}
+    - protocol: {{$serviceConfig.ports.protocol}}
+      port: {{$serviceConfig.ports.port}}
+      targetPort: {{$serviceConfig.ports.targetPort}}
 ---
-{{- end}}
+{{- end -}}
+
+
