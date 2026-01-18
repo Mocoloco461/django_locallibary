@@ -2,3 +2,5 @@ https://gemini.google.com/app/d1a8a26ac68fd33f?utm_source=gemini&utm_medium=web&
 
 
 # דרך הקישור הזה תמשיך את התהליך שניסית להתחיל לעשות
+
+a
