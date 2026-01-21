@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment
+  labels:
+    app.kubernetes.io/{{.Values.key}}: {{.Values.volume}}
+spec:
+  replicas: {{.Values.}}
+  selector:
+    matchLabels:
+      app.kubernetes.io/locallibary: locallibary
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/locallibary: locallibary
+    spec:
+
+      initContainers:
+      - name: db-migrate
+        image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary:prodtest
+        command: ["python", "manage.py", "migrate"]
+        env:
+        - name: DATABASE_URL
+          valueFrom: 
+            secretKeyRef:
+              name: env
+              key: DATABASE_URL
+
+        - name: DJANGO_SECRET_KEY
+          valueFrom: 
+            secretKeyRef:
+              name: env
+              key: DJANGO_SECRET_KEY
+              
+
+      containers:
+      - name: locallibary
+        image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary:prodtest
+        ports:
+        - containerPort: 8000
+        
+        command: ["/bin/bash", "-c"]
+        args:
+          - |
+            python manage.py collectstatic --no-input &&
+            gunicorn locallibary.wsgi:application --bind 0.0.0.0:8000 
+        
+        env:
+          - name: DATABASE_URL
+            valueFrom: 
+              secretKeyRef:
+                name: env
+                key: DATABASE_URL
+
+          - name: DJANGO_SECRET_KEY
+            valueFrom: 
+              secretKeyRef:
+                name: env
+                key: DJANGO_SECRET_KEY
+            

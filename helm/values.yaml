@@ -1,3 +1,68 @@
+app-deployment:
+  metadata:
+    name: app-deployment
+    labels:
+      key: locallibary
+      volume: locallibary-deployment
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        key: locallibary
+        volume: locallibary
+    template:
+      metadata:
+        labels:
+          key: locallibary
+          volume: locallibary
+      spec:
+
+        initContainers:
+        - name: db-migrate
+          image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary:prodtest
+          command: ["python", "manage.py", "migrate"]
+          env:
+          - name: DATABASE_URL
+            valueFrom: 
+              secretKeyRef:
+                name: env
+                key: DATABASE_URL
+
+          - name: DJANGO_SECRET_KEY
+            valueFrom: 
+              secretKeyRef:
+                name: env
+                key: DJANGO_SECRET_KEY
+                
+
+        containers:
+        - name: locallibary
+          image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary:prodtest
+          ports:
+          - containerPort: 8000
+          
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              python manage.py collectstatic --no-input &&
+              gunicorn locallibary.wsgi:application --bind 0.0.0.0:8000 
+          
+          env:
+            - name: DATABASE_URL
+              valueFrom: 
+                secretKeyRef:
+                  name: env
+                  key: DATABASE_URL
+
+            - name: DJANGO_SECRET_KEY
+              valueFrom: 
+                secretKeyRef:
+                  name: env
+                  key: DJANGO_SECRET_KEY
+            
+
+
+
 services:
   app:
     metadata: locallibary
