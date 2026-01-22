@@ -3,47 +3,42 @@ kind: Deployment
 metadata:
   name: app-deployment
   labels:
-    app.kubernetes.io/{{.Values.key}}: {{.Values.volume}}
+    app.kubernetes.io/{{.Values.metadata.labels.key}}: {{.Values.metadata.labels.volume}}
 spec:
-  replicas: {{.Values.}}
+  replicas: {{.Values.spec.replicas}}
   selector:
     matchLabels:
-      app.kubernetes.io/locallibary: locallibary
+      app.kubernetes.io/{{.Values.spec.selector.machLabels.key}}: {{.Values.spec.selector.machLabels.volume}}
   template:
     metadata:
       labels:
-        app.kubernetes.io/locallibary: locallibary
+        app.kubernetes.io/{{.Values.template.metadata.labels.key}}: {{.Values.template.metadata.labels.volume}}
     spec:
 
+      {{- with.Values.spec.template.spec.initContiners }}    
       initContainers:
-      - name: db-migrate
-        image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary:prodtest
-        command: ["python", "manage.py", "migrate"]
+      - name: {{.name}}
+        image: {{.image}}
+        command: {{.command}}
+        {{- end}}
         env:
-        - name: DATABASE_URL
+        {{- range .Values.spec.template.spec.initContainers.env }}
+        - name: {{.name}}
           valueFrom: 
-            secretKeyRef:
-              name: env
-              key: DATABASE_URL
-
-        - name: DJANGO_SECRET_KEY
-          valueFrom: 
-            secretKeyRef:
-              name: env
-              key: DJANGO_SECRET_KEY
+            secretKeyRef: 
+              name: {{.valueFrom.secretKeyRef.name}}
+              key: {{.valueFrom.secretKeyRef.key}}
+        {{- end}}
               
-
+      {{- with.Values.spec.template.spec.containers }}
       containers:
-      - name: locallibary
-        image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary:prodtest
-        ports:
-        - containerPort: 8000
-        
-        command: ["/bin/bash", "-c"]
+      - name: {{.name}}
+        image: {{.image}}        
+        command: {{.command}}
         args:
-          - |
-            python manage.py collectstatic --no-input &&
-            gunicorn locallibary.wsgi:application --bind 0.0.0.0:8000 
+          - {{.args}}
+        ports:
+        - containerPort: {{$.Values.spec.template.spec.containers.ports.containerPort}}
         
         env:
           - name: DATABASE_URL
