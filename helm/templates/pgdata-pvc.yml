@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.service-pvc.metadata.name }}
+  name: {{ (index .Values "service-pvc").metadata.name }}
 spec:
   accessModes:
-    - {{ .Values.service-pvc.spec.accessModes }}
+    - {{ (index .Values "service-pvc").spec.accessModes }}
   resources: 
     requests:
-      storage: {{ .Values.service-pvc.spec.resources.requests.storage }}
+        storage: {{ (index .Values "service-pvc").spec.resources.requests.storage }}
