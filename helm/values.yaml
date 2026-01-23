@@ -38,14 +38,14 @@ app-deployment:
         containers:
         - name: locallibary
           image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary:prodtest
-          ports:
-          - containerPort: 8000
-          
+
           command: ["/bin/bash", "-c"]
           args:
             - |
               python manage.py collectstatic --no-input &&
               gunicorn locallibary.wsgi:application --bind 0.0.0.0:8000 
+          ports:
+          - containerPort: 8000
           
           env:
             - name: DATABASE_URL
@@ -59,9 +59,7 @@ app-deployment:
                 secretKeyRef:
                   name: env
                   key: DJANGO_SECRET_KEY
-            
-
-
+                  
 
 services:
   app:
@@ -100,6 +98,7 @@ app-ingress:
               name: locallibary
               port:
                 number: 80
+
 
 secrets:
   metadata:
