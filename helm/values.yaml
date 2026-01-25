@@ -3,7 +3,7 @@ app-deployment:
     name: app-deployment
     labels:
       key: locallibary
-      volume: locallibary-deployment
+      volume: locallibary
   spec:
     replicas: 1
     selector:
@@ -41,7 +41,7 @@ app-deployment:
 
           command: ["/bin/bash", "-c"]
           args:
-            - |
+            - >
               python manage.py collectstatic --no-input &&
               gunicorn locallibary.wsgi:application --bind 0.0.0.0:8000 
           ports:
@@ -59,7 +59,45 @@ app-deployment:
                 secretKeyRef:
                   name: env
                   key: DJANGO_SECRET_KEY
-                  
+
+pgdata-deplyment:
+  name: postgres
+  labels: postgres
+  replicas:  1
+  
+  containers: 
+  - name: postgres
+    image: postgres:15
+    ports:
+    - containerPort: 5432
+    
+    volumeMounts:
+    - mountPath: "/var/lib/postgresql/"
+      name: postgres:15 
+
+    env:
+    - name: POSTGRES_DB
+      valueFrom:
+        secretKeyRef:
+          name: env
+          key: POSTGRES_DB
+
+    - name: POSTGRES_USER
+      valueFrom:
+        secretKeyRef:
+          name: env
+          key: POSTGRES_USER
+      
+    - name: POSTGRES_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: env
+          key: POSTGRES_PASSWORD
+
+  volumes:
+  - name: postgres-volume
+    persistentVolumeClaim:
+      claimName: postgres-pvc
 
 services:
   app:

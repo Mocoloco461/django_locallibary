@@ -1,0 +1,35 @@
+{{- $valuse := .Values.pgdata-deplyment }}
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: {{ $valuse.name}}
+  labels:
+    app.kubernetes.io/{{ $valuse.labels}}: {{ $valuse.labels}}
+spec:
+  replicas: {{ $valuse.replicas}}
+  selector:
+    matchLabels:
+      app.kubernetes.io/{{ $valuse.labels}}: {{ $valuse.labels}}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/{{ $valuse.labels}}: {{ $valuse.labels}}
+    spec:
+    
+      containers:
+      - name: {{ $valuse.containers.name}}
+        image: {{ $valuse.containers.image}}
+        ports:
+          - containerPort: {{ $valuse.containers.ports.containerPort}}
+
+        volumeMounts:
+        - mountPath: {{ $valuse.containers.volumeMounts.mountPath}}
+          name: {{ $valuse.containers.volumeMounts.name}}
+
+        env:
+          {{- toYaml $valuse.containers.env | nindent 12}}
+
+      volumes:
+      - name: postgres-volume
+        persistentVolumeClaim:
+          claimName: postgres-pvc

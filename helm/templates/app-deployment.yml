@@ -15,43 +15,27 @@ spec:
       labels:
         app.kubernetes.io/{{.spec.template.metadata.labels.key}}: {{.spec.template.metadata.labels.volume}}
     spec:
-
-      {{- with .spec.template.spec.initContiners }}    
+    
       initContainers:
-      - name: {{.name}}
-        image: {{.image}}
-        command: {{.command}}
-        {{- end}}
-        env:
-        {{- range .spec.template.spec.initContainers.env }}
+        {{- range .spec.template.spec.initContainers }}    
         - name: {{.name}}
-          valueFrom: 
-            secretKeyRef: 
-              name: {{.valueFrom.secretKeyRef.name}}
-              key: {{.valueFrom.secretKeyRef.key}}
-        {{- end}}
-              
-      {{- with.spec.template.spec.containers }}
+          image: {{.image}}
+          command:
+            {{- toYaml .command | nindent 10}}
+          env:
+            {{- toYaml .env | nindent 10}}
+        {{- end}}   
       containers:
+          {{- range .spec.template.spec.containers }}
       - name: {{.name}}
         image: {{.image}}        
-        command: {{.command}}
+        command:
+          {{ toYaml .command | nindent 10 }}
         args:
-          - {{.args}}
+          {{- toYaml .args | nindent 10 }}
         ports:
-        - containerPort: {{$.spec.template.spec.containers.ports.containerPort}}
-        {{- end}}
-
-        env:
-          - name: DATABASE_URL
-            valueFrom: 
-              secretKeyRef:
-                name: env
-                key: DATABASE_URL
-
-          - name: DJANGO_SECRET_KEY
-            valueFrom: 
-              secretKeyRef:
-                name: env
-                key: DJANGO_SECRET_KEY
+          {{- toYaml .ports | nindent 10}}
+        env: 
+          {{- toYaml .env | nindent 10}}
+      {{- end}}    
 {{- end}}
