@@ -113,7 +113,7 @@ services:
   db:
     metadata: postgres
     selector:
-      key: db
+      key: postgres
       volume: postgres
     ports:
       protocol: TCP
