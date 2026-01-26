@@ -149,7 +149,7 @@ secrets:
     POSTGRES_PASSWORD: "aCYpomL8k*rE4q2pRyiFsnaG"
     DATABASE_URL: "postgresql://root:aCYpomL8k*rE4q2pRyiFsnaG@postgres:5432/locallibrary"
     DJANGO_SECRET_KEY: "3it^zhra&=gd*4*b2_%y#&j@1=xdfku*800iht*ZK93slffA2!"
-    DJANGO_DEBUG: "False"
+    DJANGO_DEBUG: "false"
 
 
 service-pvc:
