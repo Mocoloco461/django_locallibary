@@ -1,4 +1,4 @@
-{{- $valuse := .Values.pgdata-deplyment }}
+{{- $valuse := (index .Values "pgdata-deplyment") }}
 apiVersion: apps/v1
 kind: Deployment
 metadata: 
@@ -17,19 +17,21 @@ spec:
     spec:
     
       containers:
-      - name: {{ $valuse.containers.name}}
-        image: {{ $valuse.containers.image}}
+      {{- range $valuse.containers}}
+      - name: {{ .name}}
+        image: {{ .image}}
         ports:
-          - containerPort: {{ $valuse.containers.ports.containerPort}}
-
+        {{- range .ports}}
+        - containerPort: {{ .containerPort}}
+        {{- end }}
         volumeMounts:
-        - mountPath: {{ $valuse.containers.volumeMounts.mountPath}}
-          name: {{ $valuse.containers.volumeMounts.name}}
-
+        {{- range .volumeMounts}}
+        - mountPath: {{ .mountPath }}
+          name: {{ .name }}
+        {{- end}}
         env:
-          {{- toYaml $valuse.containers.env | nindent 12}}
+          {{- toYaml .env | nindent 10}}
+      {{- end}}
 
       volumes:
-      - name: postgres-volume
-        persistentVolumeClaim:
-          claimName: postgres-pvcl
+        {{- toYaml $valuse.volumes | nindent 8}}

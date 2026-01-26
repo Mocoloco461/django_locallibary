@@ -73,7 +73,7 @@ pgdata-deplyment:
     
     volumeMounts:
     - mountPath: "/var/lib/postgresql/"
-      name: postgres:15 
+      name: postgres-volume 
 
     env:
     - name: POSTGRES_DB
