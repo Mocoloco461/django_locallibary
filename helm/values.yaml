@@ -103,7 +103,7 @@ services:
   app:
     metadata: locallibary
     selector:
-      key: app
+      key: locallibary
       volume: locallibary
     ports:
       protocol: TCP
