@@ -1,0 +1,17 @@
+{{- range $serviceName, $serviceConfig := .Values.services }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{$serviceConfig.metadata}}  
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/{{$serviceConfig.selector.key}}: {{$serviceConfig.selector.volume}}
+  ports:
+    - protocol: {{$serviceConfig.ports.protocol}}
+      port: {{$serviceConfig.ports.port}}
+      targetPort: {{$serviceConfig.ports.targetPort}}
+---
+{{- end -}}
+
+

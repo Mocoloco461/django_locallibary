@@ -1,0 +1,162 @@
+app-deployment:
+  metadata:
+    name: app-deployment
+    labels:
+      key: locallibary
+      volume: locallibary
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        key: locallibary
+        volume: locallibary
+    template:
+      metadata:
+        labels:
+          key: locallibary
+          volume: locallibary
+      spec:
+
+        initContainers:
+        - name: db-migrate
+          image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary:prodtest
+          command: ["python", "manage.py", "migrate"]
+          env:
+          - name: DATABASE_URL
+            valueFrom: 
+              secretKeyRef:
+                name: env
+                key: DATABASE_URL
+
+          - name: DJANGO_SECRET_KEY
+            valueFrom: 
+              secretKeyRef:
+                name: env
+                key: DJANGO_SECRET_KEY
+                
+
+        containers:
+        - name: locallibary
+          image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary:prodtest
+
+          command: ["/bin/bash", "-c"]
+          args:
+            - >
+              python manage.py collectstatic --no-input &&
+              gunicorn locallibary.wsgi:application --bind 0.0.0.0:8000 
+          ports:
+          - containerPort: 8000
+          
+          env:
+            - name: DATABASE_URL
+              valueFrom: 
+                secretKeyRef:
+                  name: env
+                  key: DATABASE_URL
+
+            - name: DJANGO_SECRET_KEY
+              valueFrom: 
+                secretKeyRef:
+                  name: env
+                  key: DJANGO_SECRET_KEY
+
+pgdata-deplyment:
+  name: postgres
+  labels: postgres
+  replicas:  1
+  
+  containers: 
+  - name: postgres
+    image: postgres:15
+    ports:
+    - containerPort: 5432
+    
+    volumeMounts:
+    - mountPath: "/var/lib/postgresql/"
+      name: postgres-volume 
+
+    env:
+    - name: POSTGRES_DB
+      valueFrom:
+        secretKeyRef:
+          name: env
+          key: POSTGRES_DB
+
+    - name: POSTGRES_USER
+      valueFrom:
+        secretKeyRef:
+          name: env
+          key: POSTGRES_USER
+      
+    - name: POSTGRES_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: env
+          key: POSTGRES_PASSWORD
+
+  volumes:
+  - name: postgres-volume
+    persistentVolumeClaim:
+      claimName: postgres-pvc
+
+services:
+  app:
+    metadata: locallibary
+    selector:
+      key: locallibary
+      volume: locallibary
+    ports:
+      protocol: TCP
+      port: 80
+      targetPort: 8000
+
+  db:
+    metadata: postgres
+    selector:
+      key: postgres
+      volume: postgres
+    ports:
+      protocol: TCP
+      port: 5432
+      targetPort: 5432
+
+
+app-ingress:
+  metadata: locallibary-ingress
+  annotations:
+    volume: traefik
+  spec:
+    rules:
+      http:
+        paths:
+          path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: locallibary
+              port:
+                number: 80
+
+
+secrets:
+  metadata:
+    name: env
+    namespace: default
+  type: Opaque
+  stringData: 
+    POSTGRES_DB: locallibrary
+    POSTGRES_USER: root
+    POSTGRES_PASSWORD: "aCYpomL8k*rE4q2pRyiFsnaG"
+    DATABASE_URL: "postgres://root:aCYpomL8k*rE4q2pRyiFsnaG@postgres:5432/locallibrary"
+    DJANGO_SECRET_KEY: "3it^zhra&=gd*4*b2_%y#&j@1=xdfku*800iht*ZK93slffA2!"
+    DJANGO_DEBUG: "false"
+
+
+service-pvc:
+  metadata:
+    name: postgres-pvc
+  spec:
+    accessModes: ReadWriteOnce
+    resources: 
+      requests:
+        storage: 10Gi
