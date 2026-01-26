@@ -1,9 +1,24 @@
-# noe we are gitlab!
-
 # locallibary project
- leran wevdevlopment via django
+## For run the app:
 
 to get secret_keu:
 ```bash
 python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
+
+---
+
+Leran goals:
+
+## Active:
+- webdevelopment
+- terraform
+- k3s kubrn
+- helm
+
+## waiting:
+- argo cd
+- secret mangmant (infisical)
+
+## external tools I uesed:
+- kubeconform (good for get feeadback about helm files <countine>)
