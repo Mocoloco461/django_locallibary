@@ -30,4 +30,4 @@ terraform.tfstate
 
 nodata
 
-helm/
+helm
