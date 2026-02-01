@@ -8,9 +8,21 @@ variable "AGENT_TOKEN" {
   sensitive = true
 }
 
+variable "SECRET_KEY" {
+  type      = string
+  sensitive = true
+}
+
+
+variable "ACCESS_KEY" {
+  type      = string
+  sensitive = true
+}
+
 
 variable "MASTER_A_IP" {
   type      = string
   sensitive = false
 
 }
+

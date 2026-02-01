@@ -19,7 +19,7 @@ spec:
       - name: db-migrate
         image: registry.gitlab.com/mocoloco461/django_locallibary/locallibary:prodtest
         command: ["python", "manage.py", "migrate"]
-        env:
+        env: 
         - name: DATABASE_URL
           valueFrom: 
             secretKeyRef:

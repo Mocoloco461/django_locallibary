@@ -12,6 +12,28 @@ services:
     ports:
       - "5432:5432"
 
+  
+  
+  init-db:
+    container_name: db-init
+    image: locallibary:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      sh -c "
+        sleep 5 &&
+        python manage.py migrate &&
+        python manage.py collectstatic --no-input
+      "
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+    depends_on:
+      - db
+    restart: "no"
+
+  
   app-libary:
     #build: .
     container_name: app-locallibary
@@ -30,17 +52,15 @@ services:
       - "6060:8000"
     depends_on:
       - db
+      - init-db
+  
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/"]
       interval: 10s
       timeout: 5s
       retries: 5
-
-
-
-
-
+      
 volumes:
   pgdata:
   
