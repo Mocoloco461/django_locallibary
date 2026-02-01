@@ -3,6 +3,7 @@ stages:
   - build_and_test
   - buid_and_run
   - push
+  - notify
 
 
 test_via_django_tests:
