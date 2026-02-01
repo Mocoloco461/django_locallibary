@@ -7,9 +7,9 @@ stages:
 
 test_via_django_tests:
   stage: build_and_test
-  image: docker:20.10-dind
+  image: docker:24.0-cli-alpine
   services:
-    - docker:20.10-dind
+    - docker:24.0-dind-alpine
   script:
     - docker compose -f docker-compose-test.yaml up --build --exit-code-from app-locallibary-unitest
     # - docker save -o locallibary.tar locallibary:latest
