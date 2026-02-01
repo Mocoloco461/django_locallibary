@@ -28,7 +28,7 @@ python -c "from django.core.management.utils import get_random_secret_key; print
 
 # Next Steps:
 
-- [ ] orgnize the proje files
+- [x] orgnize the project files
 - [ ] rules for branch and for the ci/cd
 - [ ] setup - [Ansible](https://spacelift.io/blog/ansible-devops) (Also read this blog)
 
