@@ -32,5 +32,7 @@ python -c "from django.core.management.utils import get_random_secret_key; print
 - [ ] rules for branch and for the ci/cd
 - [ ] setup - [Ansible](https://spacelift.io/blog/ansible-devops) (Also read this blog)
 
+- [ ] terraform real secrity setup
+
 ### On Prem
 - [ ] proxmox etc...
