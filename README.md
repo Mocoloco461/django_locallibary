@@ -1,4 +1,7 @@
 # locallibary project
+
+> the source is mirroring from [gitlab](https://gitlab.com/Mocoloco461/django_locallibary)
+
 ## For run the app:
 
 to get secret_keu:
