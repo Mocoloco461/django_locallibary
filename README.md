@@ -15,10 +15,22 @@ python -c "from django.core.management.utils import get_random_secret_key; print
 - terraform
 - k3s kubrn
 - helm
+- argo cd
 
 ## waiting:
-- argo cd
 - secret mangmant (infisical)
 
 ## external tools I uesed:
 - kubeconform (good for get feeadback about helm files <countine>)
+
+
+---
+
+# Next Steps:
+
+- [ ] orgnize the proje files
+- [ ] rules for branch and for the ci/cd
+- [ ] setup - [Ansible](https://spacelift.io/blog/ansible-devops) (Also read this blog)
+
+### On Prem
+- [ ] proxmox etc...
