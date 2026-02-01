@@ -20,16 +20,12 @@ test_via_django_tests:
     # # - docker load -i locallibary.tar
     # - docker tag locallibary:latest $IMAGE_TAG
     # - docker push $IMAGE_TAG
-    
+
   rules:
     - if: $CI_COMMIT_BRANCH == "prodtest"
     - if: $CI_COMMIT_MESSAGE =~ /^test:/
 
 
-
-
-
-    
   # artifacts:
   #   paths:
   #     - locallibary.tar

@@ -10,9 +10,9 @@ services:
       sh -c "
       python3 manage.py test
       "
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+    # environment:
+    #   DATABASE_URL: ${DATABASE_URL}
+    #   DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
     ports:
       - "6060:8000"
     restart: no
