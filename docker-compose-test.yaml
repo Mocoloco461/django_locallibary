@@ -1,5 +1,5 @@
 services:
-  app-libary-test:
+  app-locallibary-unitest:
     #build: .
     container_name: app-locallibary-unitest
     image: locallibary:latest
