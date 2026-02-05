@@ -29,5 +29,5 @@ terraform.tfstate
 
 
 nodata
-
+*.tfstate
 helm
